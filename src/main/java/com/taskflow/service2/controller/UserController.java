@@ -1,6 +1,8 @@
 package com.taskflow.service2.controller;
 
 
+import com.taskflow.service2.dto.BearerToken;
+import com.taskflow.service2.dto.LoginDTO;
 import com.taskflow.service2.dto.TeamDTO;
 import com.taskflow.service2.dto.UserDetailsDTO;
 import com.taskflow.service2.service.UserService;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin("http://localhost:9000")
+@CrossOrigin(origins = {"http://localhost:9000", "http://localhost:3000"})
 public class UserController {
 
     private final UserService userService;
@@ -34,6 +36,11 @@ public class UserController {
     @PostMapping("/get_team_members")
     public ResponseEntity<List<UserDetailsDTO>> getTeamMembers(@RequestBody List<Integer> teamMembers){
         return userService.getTeamMembers(teamMembers);
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<Object> authenticate(@RequestBody LoginDTO loginDTO){
+        return userService.authenticate(loginDTO);
     }
 
 }
