@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -26,13 +29,14 @@ public class SecurityConfiguration {
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors().and()
-
-                .csrf().disable() // Consider enabling and configuring CSRF for browser-based clients
+                .csrf().disable() // Disable CSRF for APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/**").permitAll() // Public access
-
-                        .anyRequest().authenticated() // All other requests need authentication
+                        .requestMatchers("/api/user/**").permitAll() // Public endpoints
+                        .anyRequest().authenticated() // Protected endpoints
                 )
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) // Handle unauthorized requests
+                .and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // JWT Filter
 
         return httpSecurity.build();
@@ -41,6 +45,18 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000");  // Your React frontend URL
+        configuration.addAllowedMethod("*");  // Allow all HTTP methods
+        configuration.addAllowedHeader("*");  // Allow all headers
+        configuration.setAllowCredentials(true); // Enable cookies if necessary
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
