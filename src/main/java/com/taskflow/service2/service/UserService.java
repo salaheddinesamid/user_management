@@ -2,6 +2,7 @@ package com.taskflow.service2.service;
 
 import com.taskflow.service2.configuration.jwt.JwtUtil;
 import com.taskflow.service2.dto.BearerToken;
+import com.taskflow.service2.dto.LoginDTO;
 import com.taskflow.service2.dto.UserDetailsDTO;
 import com.taskflow.service2.model.User;
 import com.taskflow.service2.repository.UserRepository;
@@ -74,5 +75,25 @@ public class UserService {
             return new ResponseEntity<>("USER ALREADY EXISTS", HttpStatus.ALREADY_REPORTED);
         }
     }
+    public ResponseEntity<Object> authenticate(LoginDTO loginDTO) {
+        // Retrieve user by email
+        User user = userRepository.findByEmail(loginDTO.getEmail());
+        // Check if the user exists
+        if (user == null) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
 
-}
+        // Validate password
+        if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            // Generate JWT token
+            String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+
+            // Return success response with token and user details
+            return new ResponseEntity<>(new BearerToken(token, "Bearer", user), HttpStatus.OK);
+        } else {
+            // Invalid password
+            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    }
