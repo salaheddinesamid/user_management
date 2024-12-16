@@ -23,6 +23,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/test")
+    public String test(){
+        return "Welcome to user management service";
+    }
+
     @PostMapping("/new")
     public ResponseEntity<Object> newUser(@RequestBody UserDetailsDTO user){
         return userService.createNewUser(user);

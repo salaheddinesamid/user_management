@@ -67,7 +67,7 @@ public class UserService {
 
             userRepository.save(newUser);
 
-            logger.debug("USER : " + newUser.getEmail() + " IS CREATED SUCCESSFULLY");
+            logger.info("USER : {} IS CREATED SUCCESSFULLY", newUser.getEmail());
             String token = jwtUtil.generateToken(newUser.getEmail(), newUser.getRole());
             return new ResponseEntity<>(new BearerToken(token, "Bearer", newUser), HttpStatus.OK);
         } else {
