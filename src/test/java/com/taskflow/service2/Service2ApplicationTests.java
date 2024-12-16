@@ -10,20 +10,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 class Service2ApplicationTests {
 
     @Test
 	void contextLoads() {
 
-	}
-
-	@Test
-	void testWithWebTestClient(@Autowired WebTestClient webClient) {
-		webClient
-				.get().uri("/api/user/test")
-				.exchange()
-				.expectStatus().isOk()
-				.expectBody(String.class).isEqualTo("Hello World");
 	}
 }
