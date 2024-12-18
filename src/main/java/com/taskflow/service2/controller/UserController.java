@@ -48,4 +48,9 @@ public class UserController {
         return userService.authenticate(loginDTO);
     }
 
+    @GetMapping("/get_user_details/{userId}")
+    public ResponseEntity<UserDetailsDTO> getUserDetails(@PathVariable Integer userId){
+        return userService.getUserDetails(userId);
+    }
+
 }

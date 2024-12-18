@@ -96,4 +96,15 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<UserDetailsDTO> getUserDetails(Integer userId){
+        User user = userRepository.findUserByUserID(userId);
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(user.getUserID(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole()
+                );
+        return new ResponseEntity<>(userDetailsDTO,HttpStatus.OK);
     }
+
+}
