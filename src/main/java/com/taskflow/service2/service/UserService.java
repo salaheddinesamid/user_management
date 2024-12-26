@@ -3,6 +3,7 @@ package com.taskflow.service2.service;
 import com.taskflow.service2.configuration.jwt.JwtUtil;
 import com.taskflow.service2.dto.BearerToken;
 import com.taskflow.service2.dto.LoginDTO;
+import com.taskflow.service2.dto.RegisterDTO;
 import com.taskflow.service2.dto.UserDetailsDTO;
 import com.taskflow.service2.model.User;
 import com.taskflow.service2.repository.UserRepository;
@@ -55,15 +56,14 @@ public class UserService {
         return new ResponseEntity<>(teamMembers,HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> createNewUser(UserDetailsDTO userDetailsDTO) {
-        if (!userRepository.existsByEmail(userDetailsDTO.getEmail())) {
+    public ResponseEntity<Object> createNewUser(RegisterDTO registerDTO) {
+        if (!userRepository.existsByEmail(registerDTO.getEmail())) {
             User newUser = new User();
-            newUser.setUserID(userDetailsDTO.getUserID());
-            newUser.setFirstName(userDetailsDTO.getFirstName());
-            newUser.setLastName(userDetailsDTO.getLastName());
-            newUser.setEmail(userDetailsDTO.getEmail());
-            newUser.setPassword(passwordEncoder.encode(userDetailsDTO.getPassword()));
-            newUser.setRole(userDetailsDTO.getRole().toString());
+            newUser.setFirstName(registerDTO.getFirstName());
+            newUser.setLastName(registerDTO.getLastName());
+            newUser.setEmail(registerDTO.getEmail());
+            newUser.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+            newUser.setRole(registerDTO.getRole().toString());
 
             userRepository.save(newUser);
 

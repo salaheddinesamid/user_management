@@ -1,10 +1,7 @@
 package com.taskflow.service2.controller;
 
 
-import com.taskflow.service2.dto.BearerToken;
-import com.taskflow.service2.dto.LoginDTO;
-import com.taskflow.service2.dto.TeamDTO;
-import com.taskflow.service2.dto.UserDetailsDTO;
+import com.taskflow.service2.dto.*;
 import com.taskflow.service2.service.UserService;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +19,11 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+    /*
     @PostMapping("/new")
     public ResponseEntity<Object> newUser(@RequestBody UserDetailsDTO user){
         return userService.createNewUser(user);
-    }
+    }*/
 
     @PostMapping("/validate_users")
     public ResponseEntity<Boolean[]> validateUsers(@RequestBody List<Integer> ids){
@@ -40,6 +38,11 @@ public class UserController {
     @PostMapping("/authenticate")
     public ResponseEntity<Object> authenticate(@RequestBody LoginDTO loginDTO){
         return userService.authenticate(loginDTO);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@RequestBody RegisterDTO registerDTO){
+        return userService.createNewUser(registerDTO);
     }
 
     @GetMapping("/get_user_details/{userId}")
